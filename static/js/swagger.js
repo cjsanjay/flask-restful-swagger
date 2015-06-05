@@ -313,6 +313,8 @@
         _results = [];
         for (_i = 0, _len = ops.length; _i < _len; _i++) {
           o = ops[_i];
+		  // Always overwrite it with latest operation display path (All display_paths are the same for a given class)
+		  this.display_path = (o.display_path == null || o.display_path == undefined)?resource_path:o.display_path;
           consumes = null;
           produces = null;
           if (o.consumes != null) {
@@ -520,6 +522,7 @@
         _this = this;
       this.nickname = nickname;
       this.path = path;
+	  this.display_path = resource.display_path;
       this.method = method;
       this.parameters = parameters != null ? parameters : [];
       this.summary = summary;
@@ -537,6 +540,9 @@
       if (this.path == null) {
         this.resource.api.fail("SwaggerOperation " + nickname + " is missing path.");
       }
+	  if (this.display_path == null) {
+		  this.resource.api.fail("SwaggerOperation " + nickname + " is missing display_path.");
+	  }
       if (this.method == null) {
         this.resource.api.fail("SwaggerOperation " + nickname + " is missing method.");
       }

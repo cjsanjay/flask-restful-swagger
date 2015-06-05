@@ -491,10 +491,10 @@ function program11(depth0,data) {
   if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
   else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "number", { hash: {} }); }
   buffer += escapeExpression(stack1) + "' class=\"toggleOperation\">";
-  foundHelper = helpers.path;
-  stack1 = foundHelper || depth0.path;
+  foundHelper = helpers.display_path;
+  stack1 = foundHelper || depth0.display_path;
   if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-  else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "path", { hash: {} }); }
+  else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "display_path", { hash: {} }); }
   buffer += escapeExpression(stack1) + "</a>\n                  </span>\n                </h3>\n                <ul class='options'>\n                    <li>\n                    <a href='#!/";
   foundHelper = helpers.resourceName;
   stack1 = foundHelper || depth0.resourceName;
