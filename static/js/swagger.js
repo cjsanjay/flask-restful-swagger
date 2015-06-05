@@ -313,7 +313,7 @@
         _results = [];
         for (_i = 0, _len = ops.length; _i < _len; _i++) {
           o = ops[_i];
-		  // Always overwrite it with latest operation display path (All display_paths are the same for a given class)
+		  //Always overwrite display_path with latest operation's display path (All display_paths are the same for a given class)
 		  this.display_path = (o.display_path == null || o.display_path == undefined)?resource_path:o.display_path;
           consumes = null;
           produces = null;

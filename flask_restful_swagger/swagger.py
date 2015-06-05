@@ -287,10 +287,10 @@ class SwaggerEndpoint(object):
     self.display_path = display_path if display_path else path
     path_arguments = extract_path_arguments(path)
     self.description, self.notes = _parse_doc(resource)
-    self.operations = self.extract_operations(resource, path_arguments, self.display_path)
+    self.operations = self.extract_operations(resource, self.display_path, path_arguments)
 
   @staticmethod
-  def extract_operations(resource, path_arguments=[], display_path=None):
+  def extract_operations(resource, display_path, path_arguments=[]):
     operations = []
     for method in [m.lower() for m in resource.methods]:
       method_impl = resource.__dict__.get(method, None)
