@@ -28,12 +28,14 @@ def docs(api, apiVersion='0.0', swaggerVersion='1.2',
 
   api_add_resource = api.add_resource
 
-  def add_resource(resource, path, *args, **kvargs):
+  def add_resource(resource, path, *args, **kwargs):
     register_once(api, api_add_resource, apiVersion, swaggerVersion, basePath,
                   resourcePath, produces, api_spec_url, description)
 
+    display_path = kwargs.pop('display_path', None)
+
     resource = make_class(resource)
-    endpoint = swagger_endpoint(api, resource, path)
+    endpoint = swagger_endpoint(api, resource, path, display_path)
 
     # Add a .help.json help url
     swagger_path = extract_swagger_path(path)
@@ -46,7 +48,7 @@ def docs(api, apiVersion='0.0', swaggerVersion='1.2',
       "{0}.help.html".format(swagger_path),
       endpoint=endpoint_html_str)
 
-    return api_add_resource(resource, path, *args, **kvargs)
+    return api_add_resource(resource, path, *args, **kwargs)
 
   api.add_resource = add_resource
 
@@ -246,8 +248,8 @@ class ResourceLister(Resource):
     }
 
 
-def swagger_endpoint(api, resource, path):
-  endpoint = SwaggerEndpoint(resource, path)
+def swagger_endpoint(api, resource, path, display_path=None):
+  endpoint = SwaggerEndpoint(resource, path, display_path)
   req_registry = _get_current_registry(api=api)
   req_registry.setdefault('apis', []).append(endpoint.__dict__)
 
@@ -280,14 +282,15 @@ def _parse_doc(obj):
 
 
 class SwaggerEndpoint(object):
-  def __init__(self, resource, path):
+  def __init__(self, resource, path, display_path=None):
     self.path = extract_swagger_path(path)
+    self.display_path = display_path if display_path else path
     path_arguments = extract_path_arguments(path)
     self.description, self.notes = _parse_doc(resource)
-    self.operations = self.extract_operations(resource, path_arguments)
+    self.operations = self.extract_operations(resource, self.display_path, path_arguments)
 
   @staticmethod
-  def extract_operations(resource, path_arguments=[]):
+  def extract_operations(resource, display_path, path_arguments=[]):
     operations = []
     for method in [m.lower() for m in resource.methods]:
       method_impl = resource.__dict__.get(method, None)
@@ -299,7 +302,8 @@ class SwaggerEndpoint(object):
       op = {
           'method': method,
           'parameters': path_arguments,
-          'nickname': 'nickname'
+          'nickname': 'nickname',
+          'display_path' : display_path
       }
       op['summary'], op['notes'] = _parse_doc(method_impl)
 
