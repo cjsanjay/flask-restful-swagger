@@ -168,6 +168,7 @@ def register_once(api, add_resource_func, apiVersion, swaggerVersion, basePath,
 
     add_resource_func(
       SwaggerRegistry,
+      endpoint_path + '/default',
       endpoint_path,
       endpoint_path + '.json',
       endpoint_path + '.html',
