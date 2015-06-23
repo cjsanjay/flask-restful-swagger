@@ -432,6 +432,8 @@ SwaggerResource.prototype.addOperations = function(resource_path, ops, consumes,
     output = [];
     for (var i = 0; i < ops.length; i++) {
       o = ops[i];
+      //Always overwrite display_path with latest operation's display path (All display_paths are the same for a given class)
+		  this.display_path = (o.display_path == null || o.display_path == undefined)?resource_path:o.display_path;
       consumes = this.consumes;
       produces = this.produces;
       if (o.consumes != null)
@@ -660,6 +662,7 @@ var SwaggerOperation = function(nickname, path, method, parameters, summary, not
   var errors = [];
   this.nickname = (nickname||errors.push("SwaggerOperations must have a nickname."));
   this.path = (path||errors.push("SwaggerOperation " + nickname + " is missing path."));
+  this.display_path = (resource.display_path||errors.push("SwaggerOperation " + nickname + " is missing display_path."));
   this.method = (method||errors.push("SwaggerOperation " + nickname + " is missing method."));
   this.parameters = parameters != null ? parameters : [];
   this.summary = summary;
